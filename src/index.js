@@ -57,6 +57,8 @@ const hex_to_rgba_str = (hex_color, opacity) => {
   return rgba
 }
 
+const isDate = (d) => {return d instanceof Date && isFinite(d)}
+
 const toDate = (dateString) => {
   let year = dateString.substring(0,4)
   let month = dateString.substring(4,6)-1
@@ -107,6 +109,12 @@ const drawViz = message => {
   const metricFmt = styleVal(message, 'metricFormatString');
   const ciFmt = styleVal(message, 'ciFormatString');
 
+  // Gather data for x-axis
+  // -------------------------
+  const xData = xAxisDate && isDate(toDate(message.tables.DEFAULT[0].dimension[0]))
+    ? message.tables.DEFAULT.map(d => toDate(d.dimension[0])) 
+    : message.tables.DEFAULT.map(d => d.dimension[0]);
+
   // loop through metrics and add traces
   // -------------------------
   const num_ci_metrics = 
@@ -137,10 +145,6 @@ const drawViz = message => {
       hovertemplate = `<b>%{y:${metricFmt}</b>`;
       customdata = message.tables.DEFAULT.map(d => [null, null])
     }
-
-    const xData = xAxisDate
-      ? message.tables.DEFAULT.map(d => toDate(d.dimension[0])) 
-      : message.tables.DEFAULT.map(d => d.dimension[0])
 
     // trace for metric trend line
     const trace_metric = {
@@ -213,20 +217,15 @@ const drawViz = message => {
   }
   else if (!isNumeric(yAxisMin)){
     const minValue = Math.min.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.min(...d.metric_lower)}));
-    console.log(minValue)
     yAxisLayout.range = [0.9*minValue, yAxisMax];
   }
   else if (!isNumeric(yAxisMax)){
     const maxValue = Math.max.apply(Math, message.tables.DEFAULT.map(function(d) {return Math.max(...d.metric_upper)}));
-    console.log(maxValue)
     yAxisLayout.range = [yAxisMin, 1.1*maxValue];
-    console.log(yAxisLayout.range)
   }
   else{
     yAxisLayout.range = [yAxisMin, yAxisMax];
   }
-
-  console.log(yAxisLayout)
 
   const layout = {
     height: height+60,

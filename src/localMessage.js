@@ -271,6 +271,18 @@ export const message = {
     "metricFillOpacity3": {
       "value": 0.5,
       "defaultValue": 0.1
+    },
+    "errorBarWidth1": {
+      "value": 1,
+      "defaultValue": 0.1
+    },
+    "errorBarWidth2": {
+      "value": 2,
+      "defaultValue": 0.1
+    },
+    "errorBarWidth3": {
+      "value": 3,
+      "defaultValue": 0.1
     }
   },
   "theme": {
