@@ -30,7 +30,7 @@ const styleVal = (message, styleId) => {
 // parse a style color -- defaulting to the theme color if applicable
 const themeColor = (message, styleId, themeId='themeSeriesColor', idx=null) => {
   // if a user specifed value is present, keep that
-  if (message.style[styleId].value.color !== undefined) {
+  if (message.style[styleId].value.color !== undefined && !isNull(message.style[styleId].value.color)) {
     return message.style[styleId].value.color;
   }
   // otherwise use the theme color
@@ -84,7 +84,7 @@ const drawViz = message => {
   // remove the div if it already exists
   if (document.querySelector("div")) {
     let oldDiv = document.querySelector("div");
-    oldDiv.parentNode.removeChild(oldDiv);
+    oldDiv.remove();
   }
 
   // create div for plotly plot
